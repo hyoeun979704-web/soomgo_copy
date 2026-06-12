@@ -30,6 +30,9 @@ class ProProfile(Base):
     rating: Mapped[float] = mapped_column(Float, default=0.0)
     review_count: Mapped[int] = mapped_column(Integer, default=0)
     hire_count: Mapped[int] = mapped_column(Integer, default=0)
+    service_name: Mapped[str] = mapped_column(String(100), default="")   # 예: 에어컨 설치 및 수리
+    business_name: Mapped[str] = mapped_column(String(100), default="")  # 카드에 노출되는 상호명
+    category: Mapped[str] = mapped_column(String(50), default="")        # 추천 고수 칩 필터용
 
     user: Mapped[User] = relationship(back_populates="pro_profile")
 
@@ -65,6 +68,35 @@ class Banner(Base):
     subtitle: Mapped[str] = mapped_column(String(200), default="")
     bg_color: Mapped[str] = mapped_column(String(20), default="#00C7AE")
     sort: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class Post(Base):
+    """커뮤니티 글 (홈탭 '주변 인기글' 섹션)."""
+
+    __tablename__ = "posts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    title: Mapped[str] = mapped_column(String(200))
+    body: Mapped[str] = mapped_column(Text, default="")
+    region: Mapped[str] = mapped_column(String(100), default="")
+    likes: Mapped[int] = mapped_column(Integer, default=0)
+    comments: Mapped[int] = mapped_column(Integer, default=0)
+    image: Mapped[str] = mapped_column(String(10), default="📷")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class Portfolio(Base):
+    """고수 포트폴리오 (홈탭 포트폴리오 섹션)."""
+
+    __tablename__ = "portfolios"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    pro_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    title: Mapped[str] = mapped_column(String(200))
+    region: Mapped[str] = mapped_column(String(100), default="")
+    images: Mapped[str] = mapped_column(String(50), default="🏠,🛋️,🪟")  # 이모지 플레이스홀더 3장
+
+    pro: Mapped[User] = relationship()
 
 
 class QuoteRequest(Base):

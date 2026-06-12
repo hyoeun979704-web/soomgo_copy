@@ -35,13 +35,61 @@ export interface Pro {
   rating: number
   review_count: number
   hire_count: number
+  service_name: string
+  business_name: string
+  category: string
+}
+
+export interface Post {
+  id: number
+  title: string
+  body: string
+  region: string
+  likes: number
+  comments: number
+  image: string
+}
+
+export interface Portfolio {
+  id: number
+  title: string
+  region: string
+  images: string[]
+  business_name: string
+}
+
+export interface Bundle {
+  caption: string
+  title: string
+  label: string
+  image: string
+}
+
+export interface Magazine {
+  badge: string
+  title: string
+  body: string
+  views: string
+  image: string
+  bg_color: string
+}
+
+export interface CuratedSection {
+  title: string
+  services: Service[]
 }
 
 export interface Dashboard {
+  location: string
   categories: Category[]
   banners: Banner[]
-  popular_services: Service[]
-  recommended_pros: Pro[]
+  review_highlights: Portfolio[]
+  today_pros: Pro[]
+  bundles: Bundle[]
+  portfolios: Portfolio[]
+  posts: Post[]
+  curated_sections: CuratedSection[]
+  magazine: Magazine[]
 }
 
 export interface Quote {

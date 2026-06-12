@@ -3,12 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { api } from '../api/client'
 import type { ChatRoomSummary } from '../types'
-
-function formatTime(iso: string | null): string {
-  if (!iso) return ''
-  const date = new Date(iso)
-  return date.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
-}
+import { formatTime } from '../utils/time'
 
 export default function ChatList() {
   const [rooms, setRooms] = useState<ChatRoomSummary[]>([])

@@ -70,8 +70,8 @@ export default function ChatRoom() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
-        <button type="submit" className="primary-button slim">
-          전송
+        <button type="submit" className="send-button" aria-label="전송">
+          ↑
         </button>
       </form>
     </div>

@@ -5,10 +5,12 @@ import { useAuth } from './hooks/useAuth'
 import AppShell from './layouts/AppShell'
 import ChatList from './pages/ChatList'
 import ChatRoom from './pages/ChatRoom'
+import Community from './pages/Community'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Market from './pages/Market'
 import My from './pages/My'
+import ProSearch from './pages/ProSearch'
 import Received from './pages/Received'
 import RequestDetail from './pages/RequestDetail'
 import RequestWizard from './pages/RequestWizard'
@@ -30,6 +32,8 @@ export default function App() {
       <Route path="/signup" element={<Signup />} />
       <Route element={<AppShell />}>
         <Route path="/" element={<Home />} />
+        <Route path="/pros" element={<ProSearch />} />
+        <Route path="/community" element={<Community />} />
         <Route path="/market" element={<Market />} />
         <Route
           path="/received"

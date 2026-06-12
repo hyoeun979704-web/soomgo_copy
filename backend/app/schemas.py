@@ -65,13 +65,63 @@ class ProOut(BaseModel):
     rating: float
     review_count: int
     hire_count: int
+    service_name: str
+    business_name: str
+    category: str
+
+
+class PostOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    title: str
+    body: str
+    region: str
+    likes: int
+    comments: int
+    image: str
+
+
+class PortfolioOut(BaseModel):
+    id: int
+    title: str
+    region: str
+    images: list[str]
+    business_name: str
+
+
+class CuratedSectionOut(BaseModel):
+    title: str
+    services: list[ServiceOut]
+
+
+class BundleOut(BaseModel):
+    caption: str
+    title: str
+    label: str
+    image: str
+
+
+class MagazineOut(BaseModel):
+    badge: str
+    title: str
+    body: str
+    views: str
+    image: str
+    bg_color: str
 
 
 class DashboardOut(BaseModel):
+    location: str
     categories: list[CategoryOut]
     banners: list[BannerOut]
-    popular_services: list[ServiceOut]
-    recommended_pros: list[ProOut]
+    review_highlights: list[PortfolioOut]
+    today_pros: list[ProOut]
+    bundles: list[BundleOut]
+    portfolios: list[PortfolioOut]
+    posts: list[PostOut]
+    curated_sections: list[CuratedSectionOut]
+    magazine: list[MagazineOut]
 
 
 class RequestCreateIn(BaseModel):
