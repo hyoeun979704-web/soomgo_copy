@@ -37,10 +37,16 @@ npm run dev
 
 첫 기동 시 카테고리·서비스·배너·고수 계정이 자동 시드된다. (고수 계정 비밀번호: `soomgo123!`)
 
-## Railway 배포
+## Railway 배포 (단일 서비스)
 
-- **backend** 서비스: 루트 디렉터리를 `backend/`로 지정. `railway.json`이 start command(`uvicorn ... --port $PORT`)와 헬스체크(`/health`)를 정의한다. 환경변수: `DATABASE_URL`(Postgres 플러그인), `JWT_SECRET`
-- **frontend** 서비스: 루트 `frontend/`, 빌드 `npm run build`, 정적 서빙. 환경변수 `VITE_API_BASE`에 백엔드 공개 URL 지정
+루트 `Dockerfile`이 프런트를 빌드해 FastAPI가 SPA(`/`)와 API(`/api`)를 한 도메인에서 서빙한다.
+
+1. railway.app → New Project → **Deploy from GitHub repo** → 이 저장소 선택
+2. 빌더가 Dockerfile을 자동 감지한다 (`railway.json`에 헬스체크 `/api/health` 정의됨)
+3. Settings → Networking → **Generate Domain** 으로 공개 URL 생성
+
+환경변수(선택): `JWT_SECRET`(권장), `DATABASE_URL`(Postgres 사용 시 — `psycopg2-binary`를 requirements에 추가해야 함).
+기본은 컨테이너 내 SQLite라서 재배포 시 데이터가 초기화되고 시드가 다시 채워진다(포트폴리오 데모에 적합).
 
 ## 앱(Capacitor) 패키징 — 다음 단계
 

@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .venv/
 backend/soomgo.db
+backend/static/
 
 # Node
 node_modules/
