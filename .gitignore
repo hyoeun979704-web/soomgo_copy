@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+backend/soomgo.db
+
+# Node
+node_modules/
+frontend/dist/
+
+# 환경 변수
+.env
+.env.local
