@@ -1,0 +1,39 @@
+name: deploy-check
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/deploy-check.yml"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 헬스체크
+        run: |
+          echo "== /api/health =="
+          curl -sf https://soomgocopy-production.up.railway.app/api/health
+          echo
+          echo "== / (SPA) =="
+          curl -sf -o /dev/null -w "%{http_code}\n" https://soomgocopy-production.up.railway.app/
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: E2E (배포 도메인)
+        working-directory: e2e
+        run: |
+          npm init -y > /dev/null
+          npm i playwright > /dev/null
+          npx playwright install --with-deps chromium > /dev/null
+          BASE_URL=https://soomgocopy-production.up.railway.app node e2e.mjs
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-screenshots
+          path: e2e/shots
