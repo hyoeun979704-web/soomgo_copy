@@ -8,7 +8,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
+        // localhost 대신 127.0.0.1: Windows에서 Node가 localhost를 IPv6(::1)로
+        // 먼저 해석해 uvicorn(127.0.0.1)과 연결이 어긋나는 문제를 피한다.
+        target: 'http://127.0.0.1:8000',
         changeOrigin: true,
         ws: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
