@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { api } from '../api/client'
 import type { Pro } from '../types'
@@ -7,6 +8,7 @@ export default function ProSearch() {
   const [pros, setPros] = useState<Pro[]>([])
   const [selected, setSelected] = useState('전체')
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     api
@@ -37,7 +39,7 @@ export default function ProSearch() {
       {loading && <div className="page-status">불러오는 중...</div>}
       <ul className="pro-list padded">
         {filtered.map((pro) => (
-          <li key={pro.id} className="pro-card">
+          <li key={pro.id} className="pro-card" onClick={() => navigate(`/pro/${pro.id}`)}>
             <div className="pro-avatar">{pro.name[0]}</div>
             <div className="pro-info">
               <span className="today-pro-service">{pro.service_name}</span>

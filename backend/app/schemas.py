@@ -70,6 +70,23 @@ class ProOut(BaseModel):
     category: str
 
 
+class ReviewOut(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    author: str
+    service_name: str
+    rating: float
+    content: str
+    image: str
+    created_at: datetime
+
+
+class ProDetailOut(ProOut):
+    service_id: int | None  # 견적 요청하기 CTA가 이동할 서비스
+    reviews: list[ReviewOut]
+
+
 class PostOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -173,6 +190,19 @@ class RoomOut(BaseModel):
     partner_name: str
     last_message: str | None
     last_message_at: datetime | None
+
+
+class RoomQuoteOut(BaseModel):
+    service_name: str
+    price: int
+    pro_id: int
+
+
+class RoomDetailOut(BaseModel):
+    id: int
+    partner_name: str
+    quote: RoomQuoteOut | None
+    created_at: datetime
 
 
 class MessageSendIn(BaseModel):

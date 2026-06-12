@@ -10,6 +10,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Market from './pages/Market'
 import My from './pages/My'
+import ProProfile from './pages/ProProfile'
 import ProSearch from './pages/ProSearch'
 import Received from './pages/Received'
 import RequestDetail from './pages/RequestDetail'
@@ -61,6 +62,7 @@ export default function App() {
         />
       </Route>
       <Route path="/search" element={<Search />} />
+      <Route path="/pro/:proId" element={<ProProfile />} />
       <Route
         path="/request/:serviceId"
         element={

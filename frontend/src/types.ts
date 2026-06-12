@@ -40,6 +40,34 @@ export interface Pro {
   category: string
 }
 
+export interface Review {
+  id: number
+  author: string
+  service_name: string
+  rating: number
+  content: string
+  image: string
+  created_at: string
+}
+
+export interface ProDetail extends Pro {
+  service_id: number | null
+  reviews: Review[]
+}
+
+export interface RoomQuote {
+  service_name: string
+  price: number
+  pro_id: number
+}
+
+export interface RoomDetail {
+  id: number
+  partner_name: string
+  quote: RoomQuote | null
+  created_at: string
+}
+
 export interface Post {
   id: number
   title: string

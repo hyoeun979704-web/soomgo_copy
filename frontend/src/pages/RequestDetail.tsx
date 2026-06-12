@@ -43,13 +43,14 @@ export default function RequestDetail() {
       <ul className="quote-list">
         {data.quotes.map((quote) => (
           <li key={quote.id} className="quote-card">
-            <div className="pro-name-row">
+            <button className="pro-name-row" onClick={() => navigate(`/pro/${quote.pro.id}`)}>
               <div className="pro-avatar small">{quote.pro.name[0]}</div>
               <strong>{quote.pro.name}</strong>
               <span className="pro-rating">
                 ★ {quote.pro.rating.toFixed(1)} ({quote.pro.review_count})
               </span>
-            </div>
+              <span className="chevron">›</span>
+            </button>
             <p className="quote-message">{quote.message}</p>
             <div className="quote-bottom">
               <strong className="quote-price">{quote.price.toLocaleString()}원</strong>

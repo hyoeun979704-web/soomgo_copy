@@ -99,6 +99,21 @@ class Portfolio(Base):
     pro: Mapped[User] = relationship()
 
 
+class Review(Base):
+    """고수 프로필 상세의 리뷰 탭."""
+
+    __tablename__ = "reviews"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    pro_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    author: Mapped[str] = mapped_column(String(20))  # 마스킹된 이름 (예: 홍**)
+    service_name: Mapped[str] = mapped_column(String(100), default="")
+    rating: Mapped[float] = mapped_column(Float, default=5.0)
+    content: Mapped[str] = mapped_column(Text, default="")
+    image: Mapped[str] = mapped_column(String(10), default="")  # 사진 리뷰 이모지(없으면 빈 값)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
 class QuoteRequest(Base):
     __tablename__ = "quote_requests"
 

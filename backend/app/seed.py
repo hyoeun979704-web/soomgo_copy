@@ -6,7 +6,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .models import Banner, Category, Portfolio, Post, ProProfile, Service, User
+from .models import Banner, Category, Portfolio, Post, ProProfile, Review, Service, User
 from .security import hash_password
 
 # 실제 앱 홈탭 카테고리 그리드 순서 (전체보기는 프런트 UI 항목)
@@ -86,6 +86,28 @@ POSTS = [
     ("사무실 입주청소", "전용 22평 사무실입니다. 짐은 모두 뺄 예정이고 바닥 왁싱까지 부탁드려요.", "서울 강남구", 0, 0, "🏢"),
 ]
 
+# (고수 이메일, 작성자 마스킹, 서비스명, 평점, 내용, 사진 이모지)
+REVIEWS = [
+    ("lee.pro@soomgo.test", "홍**", "이사/입주 청소업체", 5.0,
+     "아침 일찍 오셔서 반나절 만에 깔끔하게 끝내주셨어요. 창틀과 베란다 구석까지 꼼꼼했습니다.", "🪟"),
+    ("lee.pro@soomgo.test", "박**", "이사/입주 청소업체", 5.0,
+     "상담이 친절했고 가격 대비 만족스러운 서비스였습니다.", ""),
+    ("lee.pro@soomgo.test", "김**", "이사/입주 청소업체", 4.5,
+     "예약 변경에도 유연하게 대응해주셨어요. 다음에도 맡길 생각입니다.", "🧹"),
+    ("kim.pro@soomgo.test", "이**", "열쇠/도어락 설치 및 수리", 5.0,
+     "밤늦게 연락드렸는데 30분 만에 도착해서 바로 해결해주셨습니다.", "🚪"),
+    ("kim.pro@soomgo.test", "정**", "열쇠/도어락 설치 및 수리", 5.0,
+     "설치 후 사용법까지 차근차근 알려주셔서 좋았어요.", ""),
+    ("jung.pro@soomgo.test", "최**", "에어컨 설치 및 수리", 4.8,
+     "배관 정리까지 깔끔하게 마무리해주셨습니다. 시운전도 꼼꼼히 해주셨어요.", "❄️"),
+    ("park.pro@soomgo.test", "윤**", "수학 과외", 5.0,
+     "개념 설명이 명확해서 아이 성적이 한 학기 만에 많이 올랐습니다.", ""),
+    ("choi.pro@soomgo.test", "강**", "웨딩 스냅", 5.0,
+     "원하는 분위기를 잘 잡아주셨고 보정본도 빨리 받았습니다.", "📸"),
+    ("han.pro@soomgo.test", "서**", "퍼스널트레이닝(PT)", 5.0,
+     "체형 분석부터 식단까지 체계적으로 관리해주십니다.", "💪"),
+]
+
 # (고수 이메일, 제목, 지역)
 PORTFOLIOS = [
     ("lee.pro@soomgo.test", "역삼동 100평 사무실 리모델링 청소", "서울 강남구"),
@@ -121,6 +143,14 @@ def seed(db: Session) -> None:
             service_name=service_name, business_name=business_name, category=category,
         ))
         pros_by_email[email] = pro
+
+    db.flush()  # 리뷰가 pro_id FK를 참조할 수 있도록 id를 확정한다
+
+    for email, author, service_name, rating, content, image in REVIEWS:
+        db.add(Review(
+            pro_id=pros_by_email[email].id, author=author, service_name=service_name,
+            rating=rating, content=content, image=image,
+        ))
 
     for title, body, region, likes, comments, image in POSTS:
         db.add(Post(title=title, body=body, region=region, likes=likes, comments=comments, image=image))

@@ -5,8 +5,8 @@ from sqlalchemy import or_, select
 from sqlalchemy.orm import Session, joinedload
 
 from ..database import SessionLocal, get_db
-from ..models import ChatRoom, Message, User
-from ..schemas import MessageOut, MessageSendIn, RoomOut
+from ..models import ChatRoom, Message, Quote, User
+from ..schemas import MessageOut, MessageSendIn, RoomDetailOut, RoomOut, RoomQuoteOut
 from ..security import decode_token, get_current_user
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -40,6 +40,28 @@ def my_rooms(user: User = Depends(get_current_user), db: Session = Depends(get_d
             last_message_at=last.created_at if last else None,
         ))
     return result
+
+
+@router.get("/rooms/{room_id}", response_model=RoomDetailOut)
+def room_detail(room_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """채팅방 헤더와 견적서 카드에 필요한 상대·견적 정보."""
+    room = _get_room(db, room_id, user.id)
+    partner = room.pro if room.customer_id == user.id else room.customer
+    quote_out = None
+    if room.quote_id is not None:
+        quote = db.get(Quote, room.quote_id)
+        if quote is not None:
+            quote_out = RoomQuoteOut(
+                service_name=quote.request.service.name,
+                price=quote.price,
+                pro_id=quote.pro_id,
+            )
+    return RoomDetailOut(
+        id=room.id,
+        partner_name=partner.name,
+        quote=quote_out,
+        created_at=room.created_at,
+    )
 
 
 @router.get("/rooms/{room_id}/messages", response_model=list[MessageOut])

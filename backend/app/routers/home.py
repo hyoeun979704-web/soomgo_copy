@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session, joinedload
 
 from ..database import get_db
-from ..models import Banner, Category, Portfolio, Post, ProProfile, Service
+from ..models import Banner, Category, Portfolio, Post, ProProfile, Review, Service
 from ..schemas import (
     BundleOut,
     CuratedSectionOut,
@@ -11,7 +11,9 @@ from ..schemas import (
     MagazineOut,
     PortfolioOut,
     PostOut,
+    ProDetailOut,
     ProOut,
+    ReviewOut,
     ServiceOut,
 )
 
@@ -130,6 +132,26 @@ def list_pros(category: str | None = None, db: Session = Depends(get_db)):
     if category:
         stmt = stmt.where(ProProfile.category == category)
     return [pro_to_out(p) for p in db.scalars(stmt).all()]
+
+
+@router.get("/pros/{user_id}", response_model=ProDetailOut)
+def pro_detail(user_id: int, db: Session = Depends(get_db)):
+    """고수 프로필 상세: 프로필 + 리뷰 목록 + 견적 요청 대상 서비스."""
+    profile = db.scalar(
+        select(ProProfile).options(joinedload(ProProfile.user)).where(ProProfile.user_id == user_id)
+    )
+    if profile is None:
+        raise HTTPException(status_code=404, detail="고수를 찾을 수 없습니다.")
+    reviews = db.scalars(
+        select(Review).where(Review.pro_id == user_id).order_by(Review.created_at.desc())
+    ).all()
+    service = db.scalar(select(Service).where(Service.name == profile.service_name))
+    base = pro_to_out(profile)
+    return ProDetailOut(
+        **base.model_dump(),
+        service_id=service.id if service else None,
+        reviews=[ReviewOut.model_validate(r) for r in reviews],
+    )
 
 
 @router.get("/posts", response_model=list[PostOut])
